@@ -4,6 +4,14 @@ import './App.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import qs from 'qs';
 import Modal from 'react-modal';
+import { Button } from 'react-bootstrap';
+
+//import {vex} from 'vex-dialog';
+var vex = require('vex-js')
+vex.registerPlugin(require('vex-dialog'))
+vex.defaultOptions.className = 'vex-theme-os'
+
+
 
 const customStyles = {
     content: {
@@ -50,7 +58,7 @@ class Quotes extends Component {
     }
 
     closeModal() {
-        this.setState({ modalIsOpen: false });
+        this.setState({ modalIsOpen: false, name: '', quote: '' });
     }
 
     handleNameChange(e) {
@@ -85,8 +93,11 @@ class Quotes extends Component {
                 name: this.state.name,
                 quote: this.state.quote
             }).then((response) => {
+
                 console.log(response);
                 console.log("Success");
+                this.handleOnClick();
+
             })
                 .catch((error) => {
                     console.log(error);
@@ -94,14 +105,23 @@ class Quotes extends Component {
 
         }
 
-        
+
         else {
             axios.post("http://localhost:3090/api/quotes", {
                 name: this.state.name,
                 quote: this.state.quote
-            });
-        }
-        this.handleOnClick();
+            }).then((response) => {
+
+                console.log("Successfully added Quote");
+                this.handleOnClick();
+
+            })
+                .catch((error) => {
+                    console.log(error);
+                });
+
+        };
+
 
 
 
@@ -126,16 +146,21 @@ class Quotes extends Component {
         console.log("In delete row");
         console.log(row);
         let url = `http://localhost:3090/api/quotes/${row._id}`;
+
         axios.delete(url)
             .then(res => {
-                console.log('Quote deleted');
+                this.handleOnClick();
+               // vex.dialog.alert("Successfully deleted quote");
             })
             .catch(err => {
                 console.error(err);
             });
 
-    }
+   }
 
+    componentDidMount() {
+        this.handleOnClick();
+    }
 
     handleOnClick() {
         axios.get("http://localhost:3090/api/quotes")
@@ -202,10 +227,10 @@ class Quotes extends Component {
 
                     </BootstrapTable>
                 </div>
-                <button onClick={this.handleOnClick}>Get Quotes</button>
+                <Button onClick={this.handleOnClick} bsStyle="success">Get Quotes</Button>
                 <br />
                 <br />
-                <button onClick={this.openModal}>Add Quote</button>
+                <Button onClick={this.openModal} bsStyle="primary">Add Quote</Button>
                 <Modal
                     isOpen={this.state.modalIsOpen}
                     onAfterOpen={this.afterOpenModal}
@@ -223,7 +248,7 @@ class Quotes extends Component {
                             Quote:
                              <input type="text" value={this.state.quote} onChange={this.handleQuoteChange} />
                         </label>
-                        <button type="primary" onClick={this.handleSubmit}>Submit</button>
+                        <Button bsStyle='success' onClick={this.handleSubmit}>Submit</Button>
                     </form> </div>
                 </Modal>
             </div>
