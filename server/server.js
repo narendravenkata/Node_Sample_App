@@ -7,11 +7,14 @@ const expressValidator = require('express-validator');
 const mongoose = require('mongoose');
 const Signature = require('./schema.js')
 const app = express();
+const cors=require('cors');
 const url = 'mongodb://localhost:27017/Node_API';
+
+app.use(cors());
 app.use(bodyParser.json({ type: '*/*' }));
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS,PUT,DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
@@ -61,7 +64,7 @@ app.put('/api/quotes/:quote_id', function (req, res) {
 app.delete('/api/quotes/:quote_id', function (req, res) {
   console.log("delete");
 
-  Signature.remove({ _id: req.params.quote_id }, function (err, prod) {
+  Signature.remove({ _id: req.params.quote_id }, function (err, signature) {
     if (err) {
         res.send(err);
     }

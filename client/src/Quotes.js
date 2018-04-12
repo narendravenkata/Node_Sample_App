@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
+import qs from 'qs';
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -71,21 +71,38 @@ class Quotes extends Component {
 
         console.log(obj);
 
+        console.log(this.state._id);
+
         if (this.state.isEditEnabled) {
             console.log("In edit enabled")
-            let url = "http://localhost:3090/api/quotes" + "/" + this.state._id;
-            
+            let url = `http://localhost:3090/api/quotes/${this.state._id}`;
+            console.log(url);
+            var data = {
+                name: this.state.name,
+                quote: this.state.quote
+            }
             axios.put(url, {
                 name: this.state.name,
                 quote: this.state.quote
-            });
-            return null;
+            }).then((response) => {
+                console.log(response);
+                console.log("Success");
+            })
+                .catch((error) => {
+                    console.log(error);
+                });
+
         }
 
-        axios.post("http://localhost:3090/api/quotes", {
-            name: this.state.name,
-            quote: this.state.quote
-        });
+        
+        else {
+            axios.post("http://localhost:3090/api/quotes", {
+                name: this.state.name,
+                quote: this.state.quote
+            });
+        }
+        this.handleOnClick();
+
 
 
     }
@@ -107,7 +124,18 @@ class Quotes extends Component {
     handleDeleteRow(row) {
         //handle when delete button is clicked on a row
         console.log("In delete row");
+        console.log(row);
+        let url = `http://localhost:3090/api/quotes/${row._id}`;
+        axios.delete(url)
+            .then(res => {
+                console.log('Quote deleted');
+            })
+            .catch(err => {
+                console.error(err);
+            });
+
     }
+
 
     handleOnClick() {
         axios.get("http://localhost:3090/api/quotes")
@@ -188,18 +216,16 @@ class Quotes extends Component {
                     <div> <form >
                         <label>
                             Name:
-      <input type="text" value={this.state.name} onChange={this.handleNameChange} />
+                         <input type="text" value={this.state.name} onChange={this.handleNameChange} />
                         </label>
                         <br />
                         <label>
                             Quote:
-      <input type="text" value={this.state.quote} onChange={this.handleQuoteChange} />
+                             <input type="text" value={this.state.quote} onChange={this.handleQuoteChange} />
                         </label>
                         <button type="primary" onClick={this.handleSubmit}>Submit</button>
                     </form> </div>
-
                 </Modal>
-
             </div>
 
         );
