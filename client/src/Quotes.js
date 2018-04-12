@@ -97,6 +97,7 @@ class Quotes extends Component {
                 console.log(response);
                 console.log("Success");
                 this.handleOnClick();
+                this.closeModal();
 
             })
                 .catch((error) => {
@@ -114,9 +115,9 @@ class Quotes extends Component {
 
                 console.log("Successfully added Quote");
                 this.handleOnClick();
+                this.closeModal();
 
-            })
-                .catch((error) => {
+            }).catch((error) => {
                     console.log(error);
                 });
 
@@ -217,7 +218,7 @@ class Quotes extends Component {
                     <BootstrapTable data={this.state.quotes}
                         search
                         pagination={true}
-                        height={300} scrollTop={'Bottom'}
+                        height={400} scrollTop={'Bottom'}
                         options={options}
                         ref='table'>
                         <TableHeaderColumn dataField='_id' isKey hidden>Product ID</TableHeaderColumn>
@@ -244,10 +245,12 @@ class Quotes extends Component {
                          <input type="text" value={this.state.name} onChange={this.handleNameChange} />
                         </label>
                         <br />
+                        {'  '}
                         <label>
                             Quote:
                              <input type="text" value={this.state.quote} onChange={this.handleQuoteChange} />
                         </label>
+                        {'  '}
                         <Button bsStyle='success' onClick={this.handleSubmit}>Submit</Button>
                     </form> </div>
                 </Modal>

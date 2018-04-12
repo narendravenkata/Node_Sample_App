@@ -341,4 +341,22 @@ th.react-bs-table-expand-cell > div {
   animation-name: bounceOut;
 }
 
+.title{
+  color: black;
+  font-size: 16;
+  margin: 10px;
+  padding: 10px;
+
+}
+.Quotes{
+  margin: 10px;
+  padding: 5px;
+}
+
+
+.description{
+  color: royalblue;
+  padding: 5px;
+  margin: 10px;
+}
 
